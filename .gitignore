@@ -1,0 +1,11 @@
+# Entornos virtuales
+venv/
+env/
+*.pyc
+*.pyo
+__pycache__/
+
+# Archivos de configuración de entornos virtuales
+.pyvenv
+pyvenv.cfg
+my-key.json
