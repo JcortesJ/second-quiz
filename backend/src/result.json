@@ -1,3 +1,164 @@
 {
-  "California live oak": 5479
+  "result": [
+    [
+      "singleleaf pinyon",
+      "Live tree",
+      6,
+      11.84,
+      19.92,
+      2277
+    ],
+    [
+      "sugar pine",
+      "Live tree",
+      6,
+      23.01,
+      85.3,
+      2945
+    ],
+    [
+      "white alder",
+      "Live tree",
+      6,
+      10.77,
+      49.21,
+      251
+    ],
+    [
+      "Port-Orford-cedar",
+      "Live tree",
+      6,
+      19.94,
+      71.59,
+      161
+    ],
+    [
+      "willow spp.",
+      "Live tree",
+      6,
+      2.8,
+      18.19,
+      21
+    ],
+    [
+      "giant sequoia",
+      "Dead tree",
+      6,
+      42.01,
+      50.78,
+      9
+    ],
+    [
+      "western redcedar",
+      "Live tree",
+      6,
+      28.81,
+      98.27,
+      30
+    ],
+    [
+      "western hemlock",
+      "Live tree",
+      6,
+      12.7,
+      73.18,
+      190
+    ],
+    [
+      "grand fir",
+      "Live tree",
+      6,
+      16.47,
+      85.47,
+      131
+    ],
+    [
+      "noble fir",
+      "Live tree",
+      6,
+      19.31,
+      89.44,
+      16
+    ],
+    [
+      "ash spp.",
+      "Live tree",
+      6,
+      4.9,
+      24.15,
+      26
+    ],
+    [
+      "California live oak",
+      "Dead tree",
+      6,
+      12.84,
+      20.36,
+      118
+    ],
+    [
+      "California buckeye",
+      "Dead tree",
+      6,
+      6.42,
+      15.11,
+      27
+    ],
+    [
+      "western hemlock",
+      "Dead tree",
+      6,
+      21.25,
+      40.38,
+      13
+    ],
+    [
+      "Fremont cottonwood",
+      "Live tree",
+      6,
+      23.31,
+      93.52,
+      33
+    ],
+    [
+      "desert ironwood",
+      "Live tree",
+      6,
+      20.94,
+      21.7,
+      20
+    ],
+    [
+      "Pacific yew",
+      "Dead tree",
+      6,
+      5.45,
+      24.0,
+      2
+    ],
+    [
+      "Brewer spruce",
+      "Dead tree",
+      6,
+      22.72,
+      72.4,
+      5
+    ],
+    [
+      "Jeffrey pine",
+      "Dead tree",
+      6,
+      21.73,
+      45.31,
+      508
+    ],
+    [
+      "canyon live oak",
+      "Live tree",
+      6,
+      7.95,
+      29.05,
+      10836
+    ]
+  ]
 }
