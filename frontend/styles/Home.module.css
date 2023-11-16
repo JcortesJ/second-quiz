@@ -13,7 +13,7 @@
 }
 
 .fondoNormal{
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   background-color:  #C1C8C1;
   display: grid;
@@ -50,12 +50,47 @@
 .flexRow{
   display: flex;
   flex-direction: row;
-  width: 80%;
+  width: 90%;
   align-items: center;
   margin: auto;
+  height: fit-content;
   /*
   border:2px black solid;
   */
+}
+
+.commentsColumn{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  
+  height: 100%;
+  padding: 1%;
+  width: 30%;
+  margin-left: 2%;
+}
+
+.commentDiv{
+  border-radius: 10px;
+  background: #C8C1C1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 30%;
+  padding: 1%;
+  margin:auto;
+  margin-bottom: 5%;
+}
+
+.commentSection{
+  margin:auto;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  
+
 }
 
 .regularButton{
@@ -160,13 +195,17 @@
   background-color: #7E7979;
   border: none;
   border-radius: 8px;
-  height: 20px;
-  width: 150px;
+  height: 30px;
+  width: 200px;
   font-size: var(--md);
   color:white;
   margin-left: 2%;
   padding: 3px;
   
+}
+
+.finput::placeholder{
+  color:var(--hospital-green)
 }
 
 
@@ -216,9 +255,13 @@
 .infoDiv{
   background-color: #546057;
   display: flex;
-  width: 90%;
+  padding-right: 2%;
+  min-width: 85%;
   flex-direction: column;
   align-items:flex-start;
+  margin:auto;
+  margin-bottom:4%;
+  margin-top: 2%;
 }
 
 .infoDiv h4{
@@ -232,6 +275,12 @@
   margin-top: 0;
   color:white;
   font-style: normal;
+}
+
+.graphsContainer{
+  width: 65%;
+  min-height: 1000px;
+  background-color: #D9D9D9;
 }
 
 
