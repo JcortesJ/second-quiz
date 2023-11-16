@@ -1,8 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
+
+:root{
+  --very-light-pink : #C7C7C7;
+  --text-input-field: #F7F7F7;
+  --black:#000000;
+  --hospital-green:#ACD9B2;
+  --white:#FFFFFF;
+  --sm: 14px;
+  --md: 16px;
+  --lg: 18px;
+}
+
 html,
 body {
   font-family: 'Inter', sans-serif;
+  background-color:  #C1C8C1;
   padding: 0;
   margin: 0;
   height: 100%;

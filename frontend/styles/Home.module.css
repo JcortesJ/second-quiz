@@ -1,4 +1,6 @@
 
+
+
 .main {
   height: 100vh;
   width: 100%;
@@ -110,6 +112,65 @@
   margin-bottom: 4px;
 }
 
+
+
+.Qformulary{
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: 86%;
+  height: fit-content;
+  border-radius: 10px;
+  padding: 2%;
+  background-color: #D9D9D9;
+  margin-bottom: 2%;
+  /*border: 2px solid red;*/
+}
+
+.Qformulary > div{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+ 
+  margin-bottom: 8px;
+}
+
+.Qformulary > div label{
+  font-size: var(--md);
+  font-weight: 200;
+  margin-bottom: 8px;
+  margin-left: 10px;
+}
+
+.formButton{
+  background: #E1D8D8;
+  font-size: var(--md);
+  margin-top: 0.5%;
+  margin-right: 5%;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 5px;
+  width: 150px;
+  text-align: center;
+}
+.formButton:hover{
+  background-color: bisque;
+}
+
+.finput{
+  background-color: #7E7979;
+  border: none;
+  border-radius: 8px;
+  height: 20px;
+  width: 150px;
+  font-size: var(--md);
+  color:white;
+  margin-left: 2%;
+  padding: 3px;
+  
+}
+
+
+
 .input{
   background-color: #E1D8D8;
   border: none;
@@ -119,6 +180,60 @@
   padding: 6px;
   margin-bottom: 16px;
 }
+
+
+.desktopMenu{
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  height: auto;
+  border-radius:6px ;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--hospital-green);
+  border: 1px solid black;
+  list-style: none;
+}
+
+.desktopMenu div{
+  margin: auto;
+  width: 50%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.itemsMenu {  
+  text-align: end;
+  margin: auto;
+}
+
+.itemsMenu:hover{
+  color:darkgreen
+}
+
+.infoDiv{
+  background-color: #546057;
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  align-items:flex-start;
+}
+
+.infoDiv h4{
+  margin-left: 2%;
+  color:black;
+  font-size: 1.1em;
+  
+}
+
+.infoDiv h4:nth-child(2){
+  margin-top: 0;
+  color:white;
+  font-style: normal;
+}
+
 
 
 /*Responsive zone*/
