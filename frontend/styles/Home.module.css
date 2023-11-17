@@ -24,7 +24,7 @@
   padding: 2%;
   color:white;
   background-color: #546057;
-  width: 50%;
+  min-width: 80%;
   height: fit-content;
   display: flex;
   flex-direction: column;
@@ -50,7 +50,7 @@
 .flexRow{
   display: flex;
   flex-direction: row;
-  width: 90%;
+  min-width: 90%;
   align-items: center;
   margin: auto;
   height: fit-content;
@@ -58,6 +58,45 @@
   border:2px black solid;
   */
 }
+
+.flexRowGreen{
+  background: #658567;
+  display: flex;
+  flex-direction: row;
+  min-width: 80%;
+  align-items: center;
+  margin: auto;
+  padding: 2%;
+  height: fit-content;
+  margin-bottom: 5%;
+  color:white;
+  /*
+  border:2px black solid;
+  */
+}
+
+.flexColumn{
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  align-items: center;
+  margin: auto;
+  min-height: 50vh;
+  /*
+  border:2px black solid;
+  */
+}
+.flexColumnG{
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  align-items: flex-start;
+  margin: auto;
+  height: fit-content;
+
+  /*
+  border:2px black solid;
+*/}
 
 .commentsColumn{
   display: flex;
@@ -106,6 +145,7 @@
   align-items: center;
   text-align: center;
   font-size: 1.2em;
+  margin-top: 4%;
   background-color: #D9D9D9;
 }
 
@@ -204,6 +244,17 @@
   
 }
 
+.qinput{
+    background-color: #E1D8D8;
+    border: none;
+    border-radius: 8px;
+    height: 30px;
+    width: 100%;
+    font-size: var(--sm);
+    color:white;
+    padding: 3px;
+}
+
 .finput::placeholder{
   color:var(--hospital-green)
 }
@@ -277,12 +328,58 @@
   font-style: normal;
 }
 
+.profileDiv{
+  background-color: #D9D9D9;
+  display: flex;
+  padding:10px;
+  min-width: 45%;
+  flex-direction: column;
+  align-items:flex-start;
+  margin:auto;
+  margin-bottom:4%;
+  margin-top: 2%;
+  margin-right: 15%;
+}
+
+.profileDiv h4{
+  color:black;
+  font-size: 1.3em;
+  margin-left: 15px;
+}
+.profileDiv p{
+  color:black;
+  font-size: 1em;
+  margin-left: 15px;
+}
+
 .graphsContainer{
   width: 65%;
   min-height: 1000px;
   background-color: #D9D9D9;
 }
 
+.queryRow{
+  min-width: 90%;
+  margin:2%;
+  display:flex;
+  padding-left: 4%;
+  align-items: center;
+  flex-direction: row;
+  color:black;
+  background: #C8C1C1;
+  height: 100px;
+}
+
+.queryRow p{
+  margin:auto;  
+  color:black;
+}
+.queryRow p:nth-child(3){
+  padding-left: 2%;
+  height: 50px;
+  
+  border-left: 2px solid black;
+}
 
 
 /*Responsive zone*/
