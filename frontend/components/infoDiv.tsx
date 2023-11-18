@@ -7,6 +7,7 @@ const InfoDiv = (props:string[]) =>{
       <div className={styles.infoDiv}>
         <h4>{props[0]}</h4>
         <h4>{props[1]}</h4>
+        <p>{props[2]}</p>
       </div>
 
     );

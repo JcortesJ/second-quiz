@@ -35,6 +35,13 @@ line-height: normal;
 margin:auto;
 }
 
+h2{
+  font-style: italic;
+  font-size: 1.5em;
+  margin-left: 5%;
+  font-weight: normal;
+}
+
 h3{
 font-size: 1.5em;
 font-style: normal;

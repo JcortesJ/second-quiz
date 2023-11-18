@@ -3,14 +3,129 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import NavBar from '../components/navbar';
 import InfoDiv from '../components/infoDiv';
-import QueryBuilder from '../components/queryBuilder';
+
 import Comment from '../components/comment';
 import PostComment from '../components/postComment';
+import { useEffect, useRef, useState } from 'react';
 
 
 const QueryRun = () => {
+  //Data brought from the API
+  const [dataResponse,setdataResponse] = useState<any[]>([]);
+    //traer datos de la db y guardarlos con useeffect
+    const [species,setSpecies] = useState<string>("");
+    const [state,setState] = useState<number>(0);
+    const [diameter,setDiam] = useState<number>(0);
+    const [height,setH] = useState<number>(0);
+    const [inYear,setIY] = useState<number>(1950);
+    const [fnYear,setFY] = useState<number>(2010);
+    const [limit,setL] = useState<number>(1);
+    const [apiUrlEndpoint,setAPI] = useState<string>("../api/findTree/1950,2010,0,0,100")
 
-  const comments:string[][] = [['user1','wow'],['user2','such incredible query'],['user3','amazing, super interesting'],['user4','i would like to collaborate with you']]
+
+    async function getPageData() {
+      const response = await fetch(apiUrlEndpoint)
+      const res = await response.json();
+      console.log(res);
+      setdataResponse(res.result);
+    }
+
+    useEffect(
+        ()=>{
+            getPageData();
+        },[]
+    );
+    //code for the queryBuilder
+    const speciesInput = useRef<HTMLInputElement>(null);
+    const stateInput = useRef<HTMLSelectElement>(null);
+    const diameterInput = useRef<HTMLInputElement>(null);
+    const heightInput = useRef<HTMLInputElement>(null);
+    const intimeInput = useRef<HTMLInputElement>(null);
+    const fintimeInput = useRef<HTMLInputElement>(null);
+    const limitInput = useRef<HTMLInputElement>(null);
+
+    const [statesUs,setStates] = useState<string[]>(["All states", "Alabama",
+        "Alaska",
+        "Arizona",
+        "Arkansas",
+        "California",
+        "Colorado",
+        "Connecticut",
+        "Delaware",
+        "Florida",
+        "District of Columbia",
+        "Georgia",
+        "Hawaii",
+        "Idaho",
+        "Illinois",
+        "Indiana",
+        "Iowa",
+        "Kansas",
+        "Kentucky",
+        "Louisiana",
+        "Maine",
+        "Maryland",
+        "Massachusetts",
+        "Michigan",
+        "Minnesota",
+        "Mississippi",
+        "Missouri",
+        "Montana",
+        "Nebraska",
+        "Nevada",
+        "New Hampshire",
+        "New Jersey",
+        "New Mexico",
+        "New York",
+        "North Carolina",
+        "North Dakota",
+        "Ohio",
+        "Oklahoma",
+        "Oregon",
+        "Pennsylvania",
+        "Rhode Island",
+        "South Carolina",
+        "South Dakota",
+        "Tennessee",
+        "Texas",
+        "Utah",
+        "Vermont",
+        "Virginia",
+        "Washington",
+        "West Virginia",
+        "Wisconsin",
+        "Wyomin"]);
+
+        function borrarTodo(e: any): void {
+          e.preventDefault()
+  
+          if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
+              speciesInput.current.innerHTML = "";
+              stateInput.current.innerHTML = "";
+              diameterInput.current.innerHTML = "0";
+              heightInput.current.innerHTML = "0";
+              limitInput.current.innerHTML = "0";
+              intimeInput.current.innerHTML = "1900/12/1";
+              fintimeInput.current.innerHTML = "1900/12/1";
+          }
+      }
+  
+      function getData(e: any): void {
+          if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
+              e.preventDefault();
+              console.log(speciesInput.current.value);
+              console.log(stateInput.current.value);
+              console.log(diameterInput.current.value);
+              console.log(heightInput.current.value);
+              console.log(limitInput.current.value);
+              console.log(intimeInput.current.value);
+              console.log(fintimeInput.current.value);
+          }
+      }
+  
+
+    //Code for comments 
+  const [comments,setComments] = useState<string[][]>([['There are no comments','Anything here right now'],]);
   return (
     <div className={styles.fondoNormal}>
       <Head>
@@ -20,9 +135,30 @@ const QueryRun = () => {
       </Head>
       <NavBar></NavBar>
       <InfoDiv {...["¿How it works?", "Create your query with our visual-query builder. Our app will fetch the data from the USFS FIA database hosted on google cloud platform."]}></InfoDiv>
-      <QueryBuilder></QueryBuilder>
+      <form className={styles.Qformulary}>
+            <div><label>Select species: </label> <input ref={speciesInput} type={'text'} placeholder={"ALL"} className={styles.finput} /> </div>
+            <div><label>Select state: </label> <select title={"jiji"} ref={stateInput} className={styles.finput} >
+                {statesUs.map((state, index) => (<option value={index}>{state}</option>))}
+            </select></div>
+            <div><label>Select dimensions: </label>
+                <label>Diameter {'>'} </label> <input ref={diameterInput} type={'number'} className={styles.finput} placeholder={"0"} />
+                <label>height {'>'} </label> <input ref={heightInput} type={'number'} placeholder={"0"} className={styles.finput} />
+            </div>
+            <div><label>Select a range of time: </label>
+                <label>From:</label> <input ref={intimeInput} type={'number'}   max={"2009"} min={"1950"} className={styles.finput} />
+                <label>To:</label> <input ref={fintimeInput} type={'number'}  max={"2010"} min={"1951"} className={styles.finput} /></div>
+
+            <div><label>Show results:</label> <input ref={limitInput} type={'number'}  max={"1000"} min={"1"}className={styles.finput} placeholder={"10"} />
+                <label> items</label></div>
+            <div>
+                <button className={styles.formButton} onClick={borrarTodo}>Reset</button>
+                <button className={styles.formButton} onClick={getData}>Query</button>
+            </div>
+        </form>
       <section className={styles.flexRow}>
-        <article className={styles.graphsContainer}>Hola</article>
+        <article className={styles.graphsContainer}>{
+          dataResponse.length == 0 ? <h2>Run a query to view displayed data</h2> : dataResponse.map((d) => (<p>{d}</p>))
+        }</article>
         <div className={styles.commentsColumn}>
           <h3>Query's information</h3>
           <InfoDiv{...["Author", "Username"]}></InfoDiv>
