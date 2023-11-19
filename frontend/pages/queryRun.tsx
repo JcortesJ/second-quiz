@@ -188,7 +188,7 @@ const QueryRun = () => {
         for (let i = 0; i<dataResponse.length;i++){
           //add speciesSample
           let name = dataResponse[i][0];
-          let state = statesUs[parseInt(dataResponse[i][2])-1];
+          let state = statesUs[parseInt(dataResponse[i][2])];
         
             if(speciesSample[name] !== undefined){
               //if the element is already on the dict add the values
