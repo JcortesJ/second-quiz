@@ -20,19 +20,28 @@ const QueryRun = () => {
     const [inYear,setIY] = useState<number>(1950);
     const [fnYear,setFY] = useState<number>(2010);
     const [limit,setL] = useState<number>(1);
-    const [apiUrlEndpoint,setAPI] = useState<string>("../api/findTree/1950,2010,0,0,100")
-
+    const [apiUrlEndpoint,setAPI] = useState<string>("")
 
     async function getPageData() {
-      const response = await fetch(apiUrlEndpoint)
-      const res = await response.json();
-      console.log(res);
-      setdataResponse(res.result);
+      if (apiUrlEndpoint != ""){
+        const response = await fetch(apiUrlEndpoint)
+        const res = await response.json();
+        
+        if(typeof(res) == undefined){
+          setdataResponse(["No data has been found"])
+        }
+        else{
+          setdataResponse(res.result);
+        }
+
+      }
+
     }
+
 
     useEffect(
         ()=>{
-            getPageData();
+      getPageData()
         },[]
     );
     //code for the queryBuilder
@@ -96,30 +105,57 @@ const QueryRun = () => {
         "Wisconsin",
         "Wyomin"]);
 
-        function borrarTodo(e: any): void {
+     function borrarTodo(e: any): void {
           e.preventDefault()
-  
+          console.log('borrar')
           if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
-              speciesInput.current.innerHTML = "";
-              stateInput.current.innerHTML = "";
-              diameterInput.current.innerHTML = "0";
-              heightInput.current.innerHTML = "0";
-              limitInput.current.innerHTML = "0";
-              intimeInput.current.innerHTML = "1900/12/1";
-              fintimeInput.current.innerHTML = "1900/12/1";
+              speciesInput.current.value = "";
+              stateInput.current.value = "";
+              diameterInput.current.value = "0";
+              heightInput.current.value = "0";
+              limitInput.current.value = "10";
+              intimeInput.current.value = "1950";
+              fintimeInput.current.value= "2010";
           }
       }
   
-      function getData(e: any): void {
+      async function getData(e: any): Promise<void> {
           if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
               e.preventDefault();
-              console.log(speciesInput.current.value);
-              console.log(stateInput.current.value);
-              console.log(diameterInput.current.value);
-              console.log(heightInput.current.value);
-              console.log(limitInput.current.value);
-              console.log(intimeInput.current.value);
-              console.log(fintimeInput.current.value);
+              let request = "../api/";
+              //so first it is important to decide which will be the API endpoint we're going to use
+              //if there is not any info:
+              if(speciesInput.current.value == "" && (stateInput.current.value =="0" || stateInput.current.value =="")){
+                //then its a standard query without a specific state and species
+                request+= "findTree/";
+              }
+              else if( speciesInput.current.value == "" && stateInput.current.value !="0" ){
+                //then is a query with state
+                //findState/<int:stateCode>,
+                request+= "findState/"+stateInput.current.value+",";
+              }
+              else if( speciesInput.current.value != "" && (stateInput.current.value =="0" || stateInput.current.value =="")){
+                //then is a query with a species
+                request+="findSpecies/"+speciesInput.current.value+",";
+              }
+              else{
+                //then is a specific query with species and state
+                request += "findStateS/"+speciesInput.current.value+","+stateInput.current.value+",";
+
+              }
+              //final adjustments
+              if(diameterInput.current.value =="") diameterInput.current.value="0"
+              if(heightInput.current.value=="") heightInput.current.value="0"
+              if(limitInput.current.value =="") limitInput.current.value="10"
+              if(intimeInput.current.value=="") intimeInput.current.value ="1950"
+              if(fintimeInput.current.value=="") fintimeInput.current.value="2010"
+              //<int:firstYear>,<int:lastYear>,<int:initialDiameter>,<int:initialHeight>,<int:limit>
+              request += intimeInput.current.value+","+fintimeInput.current.value+","+diameterInput.current.value+","+
+              heightInput.current.value+","+limitInput.current.value;
+              console.log("final request:")
+              console.log(request)
+              setAPI(request);
+              await getPageData()
           }
       }
   
@@ -138,15 +174,15 @@ const QueryRun = () => {
       <form className={styles.Qformulary}>
             <div><label>Select species: </label> <input ref={speciesInput} type={'text'} placeholder={"ALL"} className={styles.finput} /> </div>
             <div><label>Select state: </label> <select title={"jiji"} ref={stateInput} className={styles.finput} >
-                {statesUs.map((state, index) => (<option value={index}>{state}</option>))}
+                {statesUs.map((state, index) => (<option value={index} key={index}>{state}</option>))}
             </select></div>
             <div><label>Select dimensions: </label>
                 <label>Diameter {'>'} </label> <input ref={diameterInput} type={'number'} className={styles.finput} placeholder={"0"} />
                 <label>height {'>'} </label> <input ref={heightInput} type={'number'} placeholder={"0"} className={styles.finput} />
             </div>
             <div><label>Select a range of time: </label>
-                <label>From:</label> <input ref={intimeInput} type={'number'}   max={"2009"} min={"1950"} className={styles.finput} />
-                <label>To:</label> <input ref={fintimeInput} type={'number'}  max={"2010"} min={"1951"} className={styles.finput} /></div>
+                <label>From:</label> <input ref={intimeInput} type={'number'} placeholder={"1950"}   max={"2009"} min={"1950"} className={styles.finput} />
+                <label>To:</label> <input ref={fintimeInput} type={'number'} placeholder={"2010"} max={"2010"} min={"1951"} className={styles.finput} /></div>
 
             <div><label>Show results:</label> <input ref={limitInput} type={'number'}  max={"1000"} min={"1"}className={styles.finput} placeholder={"10"} />
                 <label> items</label></div>
@@ -157,14 +193,14 @@ const QueryRun = () => {
         </form>
       <section className={styles.flexRow}>
         <article className={styles.graphsContainer}>{
-          dataResponse.length == 0 ? <h2>Run a query to view displayed data</h2> : dataResponse.map((d) => (<p>{d}</p>))
+          typeof(dataResponse)==undefined? <h2>No results found</h2> : (dataResponse.length == 0? <h2>Run a query to view displayed data</h2> : dataResponse.map((d,i) => (<p key={i}>{d}</p>)))
         }</article>
         <div className={styles.commentsColumn}>
           <h3>Query's information</h3>
           <InfoDiv{...["Author", "Username"]}></InfoDiv>
           <button className={styles.regularButton}>Save this query</button>
           <section className={styles.commentSection}>
-            {comments.map((comment)=>(<Comment {...comment}></Comment>))}
+            {comments.map((comment)=>(<Comment  {...comment}></Comment>))}
             <PostComment {...["user"]}></PostComment>
           </section>
 

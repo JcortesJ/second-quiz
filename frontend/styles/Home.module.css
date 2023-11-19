@@ -101,7 +101,7 @@
 .commentsColumn{
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: center;
   align-self: flex-start;
   height: 100%;
   padding: 1%;
