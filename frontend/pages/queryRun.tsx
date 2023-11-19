@@ -8,6 +8,7 @@ import Comment from '../components/comment';
 import PostComment from '../components/postComment';
 import { useEffect, useRef, useState } from 'react';
 import Loading from '../components/loading';
+import Graphics from '../components/graphics';
 
 
 const QueryRun = () => {
@@ -187,17 +188,17 @@ const QueryRun = () => {
         for (let i = 0; i<dataResponse.length;i++){
           //add speciesSample
           let name = dataResponse[i][0];
-          let state = statesUs[parseInt(dataResponse[i][2])];
+          let state = statesUs[parseInt(dataResponse[i][2])-1];
         
             if(speciesSample[name] !== undefined){
               //if the element is already on the dict add the values
-              speciesSample[name][0] += parseInt(dataResponse[i][3]); // Add diameter
-              speciesSample[name][1] += parseInt(dataResponse[i][4]); // Add Height
-              speciesSample[name][2] += parseInt(dataResponse[i][5]); // Add Population
+              speciesSample[name][0].push(parseInt(dataResponse[i][3])); // Add diameter
+              speciesSample[name][1].push(parseInt(dataResponse[i][4])); // Add Height
+              speciesSample[name][2]+=parseInt(dataResponse[i][5]); // Add Population
             }
-            else if(Object.keys(speciesSample).length < 10){
+            else if(Object.keys(speciesSample).length < 15){
               //if the element doesnt exist add it to the dict
-              speciesSample[name] = [parseInt(dataResponse[i][3]),parseInt(dataResponse[i][4]),parseInt(dataResponse[i][3])] 
+              speciesSample[name] = [[parseInt(dataResponse[i][3])],[parseInt(dataResponse[i][4])],[parseInt(dataResponse[i][3])]] 
             }
             //also add the state
             if (statesSample[state] !== undefined){
@@ -213,6 +214,13 @@ const QueryRun = () => {
             if(dataResponse[i][1] == "Removed") removedTrees+=parseInt(dataResponse[i][5]);
           
           
+        }
+        //calculate  average
+        for (var key in speciesSample) {
+          if (species.hasOwnProperty(key)) {
+            speciesSample[key][0] = speciesSample[key][0].reduce((ac:number, n:number) => ac + n, 0) / speciesSample[key][0].length;
+            speciesSample[key][1] = speciesSample[key][1].reduce((ac:number, n:number) => ac + n, 0) / speciesSample[key][1].length;
+          }
         }
         //finally we return the status of trees and the samples
           return [deadTrees,liveTrees,removedTrees,noStatTrees,speciesSample,statesSample]
@@ -252,8 +260,7 @@ const QueryRun = () => {
         </form>
       <section className={styles.flexRow}>
         <article className={styles.graphsContainer}>{
-          dataResponse===undefined? <p>Your query hasn't found any results. You should try changing the parameters (e.g the initial or final year)</p> : (dataResponse.length === 0? <Loading></Loading> : dataResponse.map((d,i) => (<p key={i}>{d}</p>)))
-        
+          dataResponse===undefined? <p>Your query hasn't found any results. You should try changing the parameters (e.g the initial or final year)</p> : (dataResponse.length === 0? <Loading></Loading> : <Graphics {...createCharts()}></Graphics>)
         }</article>
         <div className={styles.commentsColumn}>
           <h3>Query's information</h3>
