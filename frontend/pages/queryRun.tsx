@@ -7,6 +7,7 @@ import InfoDiv from '../components/infoDiv';
 import Comment from '../components/comment';
 import PostComment from '../components/postComment';
 import { useEffect, useRef, useState } from 'react';
+import Loading from '../components/loading';
 
 
 const QueryRun = () => {
@@ -20,90 +21,93 @@ const QueryRun = () => {
     const [inYear,setIY] = useState<number>(1950);
     const [fnYear,setFY] = useState<number>(2010);
     const [limit,setL] = useState<number>(1);
-    const [apiUrlEndpoint,setAPI] = useState<string>("")
+    const [apiUrlEndpoint,setAPI] = useState<string>("");
+     //code for the queryBuilder
+     const speciesInput = useRef<HTMLInputElement>(null);
+     const stateInput = useRef<HTMLSelectElement>(null);
+     const diameterInput = useRef<HTMLInputElement>(null);
+     const heightInput = useRef<HTMLInputElement>(null);
+     const intimeInput = useRef<HTMLInputElement>(null);
+     const fintimeInput = useRef<HTMLInputElement>(null);
+     const limitInput = useRef<HTMLInputElement>(null);
+ 
+     const [statesUs,setStates] = useState<string[]>(["All states", "Alabama",
+         "Alaska",
+         "Arizona",
+         "Arkansas",
+         "California",
+         "Colorado",
+         "Connecticut",
+         "Delaware",
+         "Florida",
+         "District of Columbia",
+         "Georgia",
+         "Hawaii",
+         "Idaho",
+         "Illinois",
+         "Indiana",
+         "Iowa",
+         "Kansas",
+         "Kentucky",
+         "Louisiana",
+         "Maine",
+         "Maryland",
+         "Massachusetts",
+         "Michigan",
+         "Minnesota",
+         "Mississippi",
+         "Missouri",
+         "Montana",
+         "Nebraska",
+         "Nevada",
+         "New Hampshire",
+         "New Jersey",
+         "New Mexico",
+         "New York",
+         "North Carolina",
+         "North Dakota",
+         "Ohio",
+         "Oklahoma",
+         "Oregon",
+         "Pennsylvania",
+         "Rhode Island",
+         "South Carolina",
+         "South Dakota",
+         "Tennessee",
+         "Texas",
+         "Utah",
+         "Vermont",
+         "Virginia",
+         "Washington",
+         "West Virginia",
+         "Wisconsin",
+         "Wyomin"]);
 
-    async function getPageData() {
+     function getPageData() {
       if (apiUrlEndpoint != ""){
-        const response = await fetch(apiUrlEndpoint)
-        const res = await response.json();
-        
-        if(typeof(res) == undefined){
-          setdataResponse(["No data has been found"])
-        }
-        else{
-          setdataResponse(res.result);
-        }
-
+        fetch(apiUrlEndpoint)
+        .then(response => response.json())
+        .then(res => {
+          if (res === undefined) {
+            setdataResponse(["No data has been found"]);
+          } else {
+            setdataResponse(res.result);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          // Manejar el error según sea necesario
+        });
       }
 
     }
 
 
     useEffect(
-        ()=>{
-      getPageData()
-        },[]
+         ()=>{ getPageData()
+        },[apiUrlEndpoint]
     );
-    //code for the queryBuilder
-    const speciesInput = useRef<HTMLInputElement>(null);
-    const stateInput = useRef<HTMLSelectElement>(null);
-    const diameterInput = useRef<HTMLInputElement>(null);
-    const heightInput = useRef<HTMLInputElement>(null);
-    const intimeInput = useRef<HTMLInputElement>(null);
-    const fintimeInput = useRef<HTMLInputElement>(null);
-    const limitInput = useRef<HTMLInputElement>(null);
-
-    const [statesUs,setStates] = useState<string[]>(["All states", "Alabama",
-        "Alaska",
-        "Arizona",
-        "Arkansas",
-        "California",
-        "Colorado",
-        "Connecticut",
-        "Delaware",
-        "Florida",
-        "District of Columbia",
-        "Georgia",
-        "Hawaii",
-        "Idaho",
-        "Illinois",
-        "Indiana",
-        "Iowa",
-        "Kansas",
-        "Kentucky",
-        "Louisiana",
-        "Maine",
-        "Maryland",
-        "Massachusetts",
-        "Michigan",
-        "Minnesota",
-        "Mississippi",
-        "Missouri",
-        "Montana",
-        "Nebraska",
-        "Nevada",
-        "New Hampshire",
-        "New Jersey",
-        "New Mexico",
-        "New York",
-        "North Carolina",
-        "North Dakota",
-        "Ohio",
-        "Oklahoma",
-        "Oregon",
-        "Pennsylvania",
-        "Rhode Island",
-        "South Carolina",
-        "South Dakota",
-        "Tennessee",
-        "Texas",
-        "Utah",
-        "Vermont",
-        "Virginia",
-        "Washington",
-        "West Virginia",
-        "Wisconsin",
-        "Wyomin"]);
+   
 
      function borrarTodo(e: any): void {
           e.preventDefault()
@@ -119,9 +123,12 @@ const QueryRun = () => {
           }
       }
   
-      async function getData(e: any): Promise<void> {
+      function getData(e: any):void {
           if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
               e.preventDefault();
+              setdataResponse([])
+              setAPI("")
+              console.log("presionado")
               let request = "../api/";
               //so first it is important to decide which will be the API endpoint we're going to use
               //if there is not any info:
@@ -147,15 +154,15 @@ const QueryRun = () => {
               if(diameterInput.current.value =="") diameterInput.current.value="0"
               if(heightInput.current.value=="") heightInput.current.value="0"
               if(limitInput.current.value =="") limitInput.current.value="10"
-              if(intimeInput.current.value=="") intimeInput.current.value ="1950"
-              if(fintimeInput.current.value=="") fintimeInput.current.value="2010"
+              if(intimeInput.current.value=="" || parseInt(intimeInput.current.value) < 1950 || parseInt(fintimeInput.current.value)>= 2010) intimeInput.current.value ="1950"
+              if(fintimeInput.current.value=="" || parseInt(fintimeInput.current.value)> 2010 || parseInt(intimeInput.current.value) <= 1950) fintimeInput.current.value="2010"
               //<int:firstYear>,<int:lastYear>,<int:initialDiameter>,<int:initialHeight>,<int:limit>
               request += intimeInput.current.value+","+fintimeInput.current.value+","+diameterInput.current.value+","+
               heightInput.current.value+","+limitInput.current.value;
               console.log("final request:")
-              console.log(request)
               setAPI(request);
-              await getPageData()
+              console.log(apiUrlEndpoint)
+              getPageData();
           }
       }
   
@@ -193,7 +200,8 @@ const QueryRun = () => {
         </form>
       <section className={styles.flexRow}>
         <article className={styles.graphsContainer}>{
-          typeof(dataResponse)==undefined? <h2>No results found</h2> : (dataResponse.length == 0? <h2>Run a query to view displayed data</h2> : dataResponse.map((d,i) => (<p key={i}>{d}</p>)))
+          dataResponse==undefined? <p>Your query hasn't found any results. You should try changing the parameters (e.g the initial or final year)</p> : (dataResponse.length == 0? <Loading></Loading> : dataResponse.map((d,i) => (<p key={i}>{d}</p>)))
+        
         }</article>
         <div className={styles.commentsColumn}>
           <h3>Query's information</h3>

@@ -386,6 +386,39 @@
   border-left: 2px solid black;
 }
 
+.loadingList{
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  min-height: 300px;
+}
+
+
+.spaceLoading{
+  display: inline-block;
+  width: 90%;
+  height: 50px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border-top: 2px solid transparent;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background-color: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #bbbbbb 18%, #eeeeee 33%);
+}
+
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -1000px
+  }
+  100% {
+    background-position: 1000px
+  }
+}
+
 
 /*Responsive zone*/
 
