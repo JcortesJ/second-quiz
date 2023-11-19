@@ -92,6 +92,7 @@ const QueryRun = () => {
             setdataResponse(["No data has been found"]);
           } else {
             setdataResponse(res.result);
+            //console.log(dataResponse[0][0])
           }
         })
         .catch(error => {
@@ -120,10 +121,12 @@ const QueryRun = () => {
               limitInput.current.value = "10";
               intimeInput.current.value = "1950";
               fintimeInput.current.value= "2010";
+              setdataResponse([])
+              setAPI("")
           }
       }
   
-      function getData(e: any):void {
+      function getAPIEndpoint(e: any):void {
           if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
               e.preventDefault();
               setdataResponse([])
@@ -154,8 +157,13 @@ const QueryRun = () => {
               if(diameterInput.current.value =="") diameterInput.current.value="0"
               if(heightInput.current.value=="") heightInput.current.value="0"
               if(limitInput.current.value =="") limitInput.current.value="10"
-              if(intimeInput.current.value=="" || parseInt(intimeInput.current.value) < 1950 || parseInt(fintimeInput.current.value)>= 2010) intimeInput.current.value ="1950"
-              if(fintimeInput.current.value=="" || parseInt(fintimeInput.current.value)> 2010 || parseInt(intimeInput.current.value) <= 1950) fintimeInput.current.value="2010"
+              if(intimeInput.current.value=="" || parseInt(intimeInput.current.value) < 1950 ) intimeInput.current.value ="1950"
+              if(fintimeInput.current.value=="" || parseInt(fintimeInput.current.value)> 2010 ) fintimeInput.current.value="2010"
+              if(parseInt(intimeInput.current.value) > parseInt(fintimeInput.current.value)){
+                let aux = intimeInput.current.value;
+                intimeInput.current.value = fintimeInput.current.value;
+                fintimeInput.current.value = aux;
+              }
               //<int:firstYear>,<int:lastYear>,<int:initialDiameter>,<int:initialHeight>,<int:limit>
               request += intimeInput.current.value+","+fintimeInput.current.value+","+diameterInput.current.value+","+
               heightInput.current.value+","+limitInput.current.value;
@@ -164,6 +172,50 @@ const QueryRun = () => {
               console.log(apiUrlEndpoint)
               getPageData();
           }
+      }
+
+      function createCharts(){
+        //name,status_name,state_code,diameter,height,n° especie
+        let deadTrees = 0
+        let liveTrees = 0
+        let removedTrees = 0
+        let noStatTrees = 0
+        let speciesSample:any= {}; 
+        // {speciesName : [diameter,height,population]}
+        let statesSample:any = {};
+        // {stateCode : population}
+        for (let i = 0; i<dataResponse.length;i++){
+          //add speciesSample
+          let name = dataResponse[i][0];
+          let state = statesUs[parseInt(dataResponse[i][2])];
+        
+            if(speciesSample[name] !== undefined){
+              //if the element is already on the dict add the values
+              speciesSample[name][0] += parseInt(dataResponse[i][3]); // Add diameter
+              speciesSample[name][1] += parseInt(dataResponse[i][4]); // Add Height
+              speciesSample[name][2] += parseInt(dataResponse[i][5]); // Add Population
+            }
+            else if(Object.keys(speciesSample).length < 10){
+              //if the element doesnt exist add it to the dict
+              speciesSample[name] = [parseInt(dataResponse[i][3]),parseInt(dataResponse[i][4]),parseInt(dataResponse[i][3])] 
+            }
+            //also add the state
+            if (statesSample[state] !== undefined){
+              statesSample[state] += parseInt(dataResponse[i][5])    
+            }
+            else if (Object.keys(statesSample).length<10){
+              statesSample[state] = parseInt(dataResponse[i][5])
+            }
+            //increase status 
+            if(dataResponse[i][1] == "Live tree") liveTrees+=parseInt(dataResponse[i][5]);
+            if(dataResponse[i][1] == "Dead tree") deadTrees+=parseInt(dataResponse[i][5]);
+            if(dataResponse[i][1] == "No status") noStatTrees+=parseInt(dataResponse[i][5]);
+            if(dataResponse[i][1] == "Removed") removedTrees+=parseInt(dataResponse[i][5]);
+          
+          
+        }
+        //finally we return the status of trees and the samples
+          return [deadTrees,liveTrees,removedTrees,noStatTrees,speciesSample,statesSample]
       }
   
 
@@ -195,12 +247,12 @@ const QueryRun = () => {
                 <label> items</label></div>
             <div>
                 <button className={styles.formButton} onClick={borrarTodo}>Reset</button>
-                <button className={styles.formButton} onClick={getData}>Query</button>
+                <button className={styles.formButton} onClick={getAPIEndpoint}>Query</button>
             </div>
         </form>
       <section className={styles.flexRow}>
         <article className={styles.graphsContainer}>{
-          dataResponse==undefined? <p>Your query hasn't found any results. You should try changing the parameters (e.g the initial or final year)</p> : (dataResponse.length == 0? <Loading></Loading> : dataResponse.map((d,i) => (<p key={i}>{d}</p>)))
+          dataResponse===undefined? <p>Your query hasn't found any results. You should try changing the parameters (e.g the initial or final year)</p> : (dataResponse.length === 0? <Loading></Loading> : dataResponse.map((d,i) => (<p key={i}>{d}</p>)))
         
         }</article>
         <div className={styles.commentsColumn}>
