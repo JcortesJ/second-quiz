@@ -189,7 +189,6 @@ const QueryRun = () => {
         for (let i = 0; i<dataResponse.length;i++){
           //add speciesSample
           let name = dataResponse[i][0];
-          console.log(`Dato parseado: ${parseInt(dataResponse[i][2])} dato original ${dataResponse[i][2]}`)
           let state = statesUs[parseInt(dataResponse[i][2])];
             if(speciesSample[name] !== undefined){
               
