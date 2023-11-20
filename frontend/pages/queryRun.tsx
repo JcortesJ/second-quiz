@@ -9,6 +9,7 @@ import PostComment from '../components/postComment';
 import { useEffect, useRef, useState } from 'react';
 import Loading from '../components/loading';
 import Graphics from '../components/graphics';
+import PostQuery from '../components/postQuery';
 
 
 const QueryRun = () => {
@@ -188,9 +189,10 @@ const QueryRun = () => {
         for (let i = 0; i<dataResponse.length;i++){
           //add speciesSample
           let name = dataResponse[i][0];
+          console.log(`Dato parseado: ${parseInt(dataResponse[i][2])} dato original ${dataResponse[i][2]}`)
           let state = statesUs[parseInt(dataResponse[i][2])];
-        
             if(speciesSample[name] !== undefined){
+              
               //if the element is already on the dict add the values
               speciesSample[name][0].push(parseInt(dataResponse[i][3])); // Add diameter
               speciesSample[name][1].push(parseInt(dataResponse[i][4])); // Add Height
@@ -265,7 +267,7 @@ const QueryRun = () => {
         <div className={styles.commentsColumn}>
           <h3>Query's information</h3>
           <InfoDiv{...["Author", "Username"]}></InfoDiv>
-          <button className={styles.regularButton}>Save this query</button>
+          <PostQuery{...["user",""]}></PostQuery>
           <section className={styles.commentSection}>
             {comments.map((comment)=>(<Comment  {...comment}></Comment>))}
             <PostComment {...["user"]}></PostComment>
