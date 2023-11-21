@@ -18,3 +18,10 @@ On the navigation bar, there is a button that says 'query search.' There, you wi
 
 # How to start?
 Just let your imagination surprise you. Start with a simple query like the default one and vary the number of result items to obtain better precision.
+
+# Explanation video
+https://youtu.be/LHWmL4ZgUms
+
+# Documentation diagrams
+
+https://drive.google.com/file/d/1VLXTC6yGGrxHSJONZkopI8OMiFwgG76k/view?usp=sharing

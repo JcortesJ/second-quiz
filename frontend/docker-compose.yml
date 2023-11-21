@@ -6,7 +6,7 @@ services:
       context: ./
       dockerfile: Dockerfile.frontend
     ports:
-      - "3000:3000"
+      - "9000:3000"
     depends_on:
       - backend
 
@@ -15,9 +15,9 @@ services:
       context: ./api
       dockerfile: Dockerfile.backend
     ports:
-      - "5000:5000"
+      - "9001:5000"
     environment:
-      - MYSQL_HOST=db
+      - MYSQL_HOST=localhost
       - MYSQL_USER=root
       - MYSQL_PASSWORD=toor
       - MYSQL_DB= ALLTrees
