@@ -469,6 +469,42 @@
     width: 100%;
     flex-direction: column;
   }
+  .flexRow{
+    width: 80%;
+    font-size: 0.78em;
+    padding: 2%;
+    min-height: 30%;
+  }
+  .regularButton{
+    font-size: large;
+  }
+
+  .main{
+    width: 80vh;
+  }
+  .desktopMenu{
+    flex-direction: row;
+    width: 60%;
+    align-items: flex-start;
+  }
+  
+  .desktopMenu div{
+    margin: auto;
+    width: 40%;
+    align-items: flex-start;
+  }
+  
+  
+  .itemsMenu {  
+    text-align: end;
+    margin: auto;
+  }
+
+  .infoDiv{
+    max-width: 500px;
+  }
+
+  
 }
 
 
