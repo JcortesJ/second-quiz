@@ -83,7 +83,7 @@ const QueryRun = () => {
     console.log(`ID: ${queryId}`)
     function adjustParameters(e:any){
       e.preventDefault();
-      if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null && dataResponse!=undefined && dataResponse[0][0]==queryId){
+      if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null && dataResponse[0]!=undefined){
         if (dataResponse[0][2]=="any") speciesInput.current.value=""
         else speciesInput.current.value=dataResponse[0][2]
         stateInput.current.value =dataResponse[0][1] 
@@ -131,11 +131,15 @@ const QueryRun = () => {
           e.preventDefault()
           if(queryId != null){
             let api = "/api/user/queries/located/"+queryId
-            setAPI(api)
-            getPageData()
-            setTimeout(() => {
+            if (api === apiUrlEndpoint){
+              getPageData()
+            }else{
+              setAPI(api)
+              getPageData()
+            }
+            if (dataResponse[0] != undefined){
               adjustParameters(e)
-            }, 5000);
+            }
           }
           else if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
               speciesInput.current.value = "";
@@ -196,7 +200,7 @@ const QueryRun = () => {
               console.log(apiUrlEndpoint)
               
               setQI((Math.floor(Math.random() * 1000) + 1).toString())
-              console.log(`Id: ${id}`)
+              console.log(`nueva id: ${id}`)
               //<string:username>,<string:name>,<int:stateCode>,<string:speciesName>,<int:initialDiameter>,<int:initialHeight>,<int:firstYear>,<int:lastYear>,<int:limit>,<string:query_id>,<string:comment>
               let change = [username,stateInput.current.value,speciesInput.current.value,diameterInput.current.value,heightInput.current.value,intimeInput.current.value,fintimeInput.current.value,limitInput.current.value,id];
               console.log(`Parameters: ${change}`)

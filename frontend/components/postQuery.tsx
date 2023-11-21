@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { useRef, useState } from 'react'
+import { useQuery } from '../pages/context/QueryContext'
 
 
 const PostQuery = (props: any[]) => {
@@ -9,16 +10,18 @@ const PostQuery = (props: any[]) => {
     const [key, setKey] = useState<number>(0)
     const nameInput = useRef<HTMLInputElement>(null);
     const [name, setName] = useState<string>("");
+    const {queryId,setQueryId} = useQuery()
 
     function createQuery(e: any) {
         if (nameInput.current != null ) {
             e.preventDefault()
             let apiUrlEndpoint: string = "../api/queries/create/";
             let species: string = ""
-            // <string:username>,<string:name>,<int:stateCode>,<string:speciesName>,<int:initialDiameter>,<int:initialHeight>,<int:firstYear>,<int:lastYear>,<int:limit>
+            // <string:username>,<string:name>,<int:stateCode>,<string:speciesName>,<int:initialDiameter>,<int:initialHeight>,<int:firstYear>,<int:lastYear>,<int:limit>,<string:id>
             if (props[2] == "") species = "any"
             else species = props[2]
             console.log(props)
+            setQueryId(props[8])
             apiUrlEndpoint += props[0] + "," +nameInput.current.value+","+ props[1] + "," + species + ","+ props[3] + "," + props[4] + "," + props[5] + "," + props[6] + "," +props[7]+","+props[8];
             console.log(apiUrlEndpoint)
             fetch(apiUrlEndpoint)
