@@ -99,6 +99,14 @@ def getAllSavedQueries():
     results = {"result":response}
     #if results = 0, the user doesnt exist in the db. If it is 1, it already exists
     cursor.close()
+    return createJson(results)
+
+def query_by_id(id):
+    cursor = db.cursor()
+    cursor.execute("SELECT id,tree_state_code,species_common_name,current_diameter,actual_height,initial_time,final_time,limits FROM queries WHERE id=(%s)",(id,))
+    response = cursor.fetchall()
+    results = {"result":response}
+    cursor.close()
     return createJson(results)     
     
     

@@ -10,7 +10,7 @@ import Loading from '../components/loading';
 import Graphics from '../components/graphics';
 import PostQuery from '../components/postQuery';
 import { useUser } from './context/UserContext';
-
+import { useQuery } from './context/QueryContext';
 
 const QueryRun = () => {
   //Data brought from the API
@@ -18,6 +18,7 @@ const QueryRun = () => {
   const [dataResponse,setdataResponse] = useState<any[]>([]);
   const [queryParameters,setQP] = useState<any[]>([]);
   const [id,setQI] = useState<string>("");
+  const {queryId,setQueryId} = useQuery();
     const [apiUrlEndpoint,setAPI] = useState<string>("");
      //code for the queryBuilder
      const speciesInput = useRef<HTMLInputElement>(null);
@@ -79,6 +80,21 @@ const QueryRun = () => {
          "West Virginia",
          "Wisconsin",
          "Wyomin"]);
+    console.log(`ID: ${queryId}`)
+    function adjustParameters(e:any){
+      e.preventDefault();
+      if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null && dataResponse!=undefined && dataResponse[0][0]==queryId){
+        if (dataResponse[0][2]=="any") speciesInput.current.value=""
+        else speciesInput.current.value=dataResponse[0][2]
+        stateInput.current.value =dataResponse[0][1] 
+        diameterInput.current.value=dataResponse[0][3]
+        heightInput.current.value=dataResponse[0][4]
+        intimeInput.current.value=dataResponse[0][5]
+        fintimeInput.current.value=dataResponse[0][6]
+        limitInput.current.value=dataResponse[0][7]
+        getAPIEndpoint(e);
+      }
+    }
     
      console.log("logeado"+username)
      function getPageData() {
@@ -104,16 +120,24 @@ const QueryRun = () => {
  
 
 
-
     useEffect(
          ()=>{ getPageData()
+          
         },[apiUrlEndpoint]
     );
    
 
      function borrarTodo(e: any): void {
           e.preventDefault()
-          if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
+          if(queryId != null){
+            let api = "/api/user/queries/located/"+queryId
+            setAPI(api)
+            getPageData()
+            setTimeout(() => {
+              adjustParameters(e)
+            }, 5000);
+          }
+          else if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
               speciesInput.current.value = "";
               diameterInput.current.value = "0";
               heightInput.current.value = "0";

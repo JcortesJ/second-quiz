@@ -6,12 +6,14 @@ import QueryInfo from '../components/queryInfo';
 import { useRef } from 'react';
 import { useEffect,  useState } from 'react'
 import { useUser } from './context/UserContext';
+import { useQuery } from './context/QueryContext';
 import Loading from '../components/loading';
 
 const QuerySearch = () =>{
    
     const [queries,setQ] = useState<any[]>([])  
     const {username,setLoggedInUser} = useUser();
+    const {queryId,setQueryId} = useQuery();
 
     function getPageData() {
         let apiUrlEndpoint = "../api/user/queries/saved";
@@ -50,7 +52,13 @@ const QuerySearch = () =>{
 
             </section>
             <div className={styles.specialRectangle}>
-                {queries.length === 0? <Loading></Loading> :(queries.map((q)=>(<QueryInfo {...q}></QueryInfo>)))}
+            {queries.length === 0?
+                 <Loading></Loading> :
+                 (queries.map((q)=>(
+                 <a href="./queryRun" onClick={()=>{
+                  setQueryId(q[0])
+                 }}><QueryInfo {...q} ></QueryInfo></a>
+                 )))}
             </div>
             
             

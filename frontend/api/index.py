@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from bigQueryCon import standard_query,state_query,species_query,state_species_query
-from mysqlCon import bringAllusers, getAllSavedQueries,verifyUsername,insertUser,saveQueryUser,getSavedQueries
+from mysqlCon import bringAllusers, getAllSavedQueries, query_by_id,verifyUsername,insertUser,saveQueryUser,getSavedQueries
 
 
 app = Flask(__name__)
@@ -65,6 +65,10 @@ def savedQueries(username):
 @app.route("/api/user/queries/saved",methods=["GET"])
 def allSavedQueries():
     return getAllSavedQueries()
+
+@app.route("/api/user/queries/located/<string:id>",methods=["GET"])
+def getQueryId(id):
+    return query_by_id(id)
 
 
 

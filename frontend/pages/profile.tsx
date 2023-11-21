@@ -6,11 +6,13 @@ import ProfileDiv from '../components/profileDiv';
 import QueryInfo from '../components/queryInfo';
 import { useEffect, useRef, useState } from 'react'
 import { useUser } from './context/UserContext';
+import {useQuery} from './context/QueryContext';
 import Loading from '../components/loading';
 
 const Profile = () =>{
     const [queries,setQ] = useState<any[]>([])  
     const {username,setLoggedInUser} = useUser();
+    const {queryId,setQueryId} = useQuery();
     function getPageData() {
         let apiUrlEndpoint = "../api/user/queries/"+username;
           fetch(apiUrlEndpoint)
@@ -28,11 +30,15 @@ const Profile = () =>{
 
   
       }
+
+
   
       useEffect(
            ()=>{ getPageData()
           },[]
       );
+
+
     return(
         <div className={styles.fondoNormal}>
         <Head>
@@ -48,7 +54,13 @@ const Profile = () =>{
             </section>
             <div className={styles.specialRectangle}>
                 <button className={styles.rectangularButton} onClick={getPageData}><h3>Refresh</h3></button>
-                {queries.length === 0? <Loading></Loading> :(queries.map((q)=>(<QueryInfo {...q}></QueryInfo>)))}
+                {queries.length === 0?
+                 <Loading></Loading> :
+                 (queries.map((q)=>(
+                 <a href="./queryRun" onClick={()=>{
+                  setQueryId(q[0])
+                 }}><QueryInfo {...q} ></QueryInfo></a>
+                 )))}
             </div>
             
             
