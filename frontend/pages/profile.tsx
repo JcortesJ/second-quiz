@@ -55,7 +55,7 @@ const Profile = () =>{
             <div className={styles.specialRectangle}>
                 <button className={styles.rectangularButton} onClick={getPageData}><h3>Refresh</h3></button>
                 {queries.length === 0?
-                 <Loading></Loading> :
+                 <p>It seems that you haven't saved any queries. You can go to search queries to give yourself some ideas</p>:
                  (queries.map((q)=>(
                  <a href="./queryRun" onClick={()=>{
                   setQueryId(q[0])

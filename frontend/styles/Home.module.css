@@ -406,7 +406,7 @@
 }
 
 .queryRow{
-  min-width: 90%;
+  min-width: 100vh;
   margin:2%;
   display:flex;
   padding-left: 4%;

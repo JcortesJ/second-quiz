@@ -46,14 +46,14 @@ const QuerySearch = () =>{
                 <div className={styles.flexColumnG}>
                 <h2>Search Prexisting queries</h2>
                     <h3>Here you can find the list of all of the saved queries</h3>
-                    
+                    <p>If you are interested in one, just click its container and in the query builder press "reset". Wait a few seconds and the query will be displayed. If you want, you can save this query with a name</p>
                 </div>
                 <button className={styles.rectangularButton} onClick={getPageData}><h3>Refresh</h3></button>
 
             </section>
             <div className={styles.specialRectangle}>
             {queries.length === 0?
-                 <Loading></Loading> :
+                 <p>Wow it seems very lonely here, why dont you start querying something?</p> :
                  (queries.map((q)=>(
                  <a href="./queryRun" onClick={()=>{
                   setQueryId(q[0])
