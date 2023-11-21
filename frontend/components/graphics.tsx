@@ -172,8 +172,10 @@ const Graphics = (props: any[]) => {
             <Bar data={dataH} className={styles.graph} options={{responsive: true}}/>
             <h3>Number of trees by species </h3>
             <Bar data={dataN} className={styles.graph} options={{responsive: true}}/>
+            <p>If not all species have population its because the scale of the other species.</p>
             <h3>Data collected from states </h3>
             <Doughnut data={dataPieSt} className={styles.graph} options={{responsive: true}}/>
+            
                         
         </div>
     );

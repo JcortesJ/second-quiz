@@ -49,7 +49,7 @@ const PostQuery = (props: any[]) => {
                 <div key={key}>
                     {dataResponse.length > 0 ?
                         (<div>
-                            <label>Name of the query: {name}</label>
+                            <label>Name:{name}</label>
                         </div>) : (<div>
                             <input className={styles.input} ref={nameInput}  placeholder={"Give a name to the query"}></input>
                             <button className={styles.regularButton} onClick={createQuery}>Save it</button>

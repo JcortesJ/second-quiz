@@ -4,10 +4,32 @@ import styles from '../styles/Home.module.css'
 import NavBar from '../components/navbar';
 import QueryInfo from '../components/queryInfo';
 import { useRef } from 'react';
+import { useEffect,  useState } from 'react'
+import { useUser } from './context/UserContext';
+import Loading from '../components/loading';
 
 const QuerySearch = () =>{
-    const inputQuery = useRef<HTMLInputElement>(null);
-    const queries = [["Such amazing query","this query is for bla bla bla bla","Author's name"],["Such amazing query","this query is for bla bla bla bla","Author's name"]];
+   
+    const [queries,setQ] = useState<any[]>([])  
+    const {username,setLoggedInUser} = useUser();
+
+    function getPageData() {
+        let apiUrlEndpoint = "../api/user/queries/saved";
+          fetch(apiUrlEndpoint)
+          .then(response => response.json())
+          .then(res => {
+            if (res !== undefined) {
+              setQ(res.result);
+              console.log(queries)
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+            // Manejar el error según sea necesario
+          });
+
+  
+      }
 
     return (
         <div className={styles.fondoNormal}>
@@ -20,17 +42,15 @@ const QuerySearch = () =>{
         <div className={styles.flexColumn}>
             <section className={styles.flexRowGreen}>
                 <div className={styles.flexColumnG}>
-                    <h2>Search Prexisting queries</h2>
-                    <input className={styles.qinput} type={"text"} ref={inputQuery} ></input>
+                <h2>Search Prexisting queries</h2>
+                    <h3>Here you can find the list of all of the saved queries</h3>
+                    
                 </div>
-                <div className={styles.flexColumnG}>
-                    <button className={styles.regularButton}>Search by name</button>
-                    <button className={styles.regularButton}>Search by autor</button>
-                </div>
+                <button className={styles.rectangularButton} onClick={getPageData}><h3>Refresh</h3></button>
 
             </section>
             <div className={styles.specialRectangle}>
-                {queries.map((q)=>(<QueryInfo {...q}></QueryInfo>))}
+                {queries.length === 0? <Loading></Loading> :(queries.map((q)=>(<QueryInfo {...q}></QueryInfo>)))}
             </div>
             
             

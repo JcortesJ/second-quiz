@@ -82,14 +82,24 @@ def saveQueryUser(username,queryname,state,species,diameter,height,inYear,finYea
     
 def getSavedQueries(username):
     cursor = db.cursor()
-    args = [username]
+    args = (username,)
     #we use an stored procedure
-    cursor.execute("SELECT queries.id,queryname FROM savedqueries INNER JOIN queries ON query_id=queries.id WHERE username=(%s)",args)
+    cursor.execute("SELECT queries.id,queryname,username FROM savedqueries INNER JOIN queries ON query_id=queries.id WHERE username=(%s)",args)
     response =cursor.fetchall()
     results = {"result":response}
     #if results = 0, the user doesnt exist in the db. If it is 1, it already exists
     cursor.close()
-    return createJson(results)    
+    return createJson(results) 
+
+def getAllSavedQueries():
+    cursor = db.cursor()
+    #we use an stored procedure
+    cursor.execute("SELECT queries.id,queryname,username FROM savedqueries INNER JOIN queries ON query_id=queries.id ")
+    response =cursor.fetchall()
+    results = {"result":response}
+    #if results = 0, the user doesnt exist in the db. If it is 1, it already exists
+    cursor.close()
+    return createJson(results)     
     
     
     

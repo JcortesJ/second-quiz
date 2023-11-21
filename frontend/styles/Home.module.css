@@ -64,7 +64,7 @@
   display: flex;
   flex-direction: row;
   min-width: 80%;
-  align-items: center;
+  align-items: flex-start;
   margin: auto;
   padding: 2%;
   height: fit-content;
@@ -89,7 +89,7 @@
 .flexColumnG{
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 80%;
   align-items: flex-start;
   margin: auto;
   height: fit-content;
@@ -97,6 +97,14 @@
   /*
   border:2px black solid;
 */}
+
+.flexColumnG h2{
+  margin-left: 0;
+}
+
+.flexColumnG h3{
+  margin-left: 0;
+}
 
 .commentsColumn{
   display: flex;

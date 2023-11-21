@@ -4,9 +4,35 @@ import styles from '../styles/Home.module.css'
 import NavBar from '../components/navbar';
 import ProfileDiv from '../components/profileDiv';
 import QueryInfo from '../components/queryInfo';
+import { useEffect, useRef, useState } from 'react'
+import { useUser } from './context/UserContext';
+import Loading from '../components/loading';
 
 const Profile = () =>{
-    const queries = [["Such amazing query","this query is for bla bla bla bla","Author's name"],["Such amazing query","this query is for bla bla bla bla","Author's name"]];
+    const [queries,setQ] = useState<any[]>([])  
+    const {username,setLoggedInUser} = useUser();
+    function getPageData() {
+        let apiUrlEndpoint = "../api/user/queries/"+username;
+          fetch(apiUrlEndpoint)
+          .then(response => response.json())
+          .then(res => {
+            if (res !== undefined) {
+              setQ(res.result);
+              console.log(queries)
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+            // Manejar el error según sea necesario
+          });
+
+  
+      }
+  
+      useEffect(
+           ()=>{ getPageData()
+          },[]
+      );
     return(
         <div className={styles.fondoNormal}>
         <Head>
@@ -17,11 +43,12 @@ const Profile = () =>{
         <NavBar></NavBar>
         <div className={styles.flexColumn}>
             <section className={styles.flexRow}>
-                <ProfileDiv {...["My profile","user"]}></ProfileDiv>
-                <ProfileDiv {...["Saved Queries","3"]}></ProfileDiv>
+                <ProfileDiv {...["My profile",username]}></ProfileDiv>
+                <ProfileDiv {...["Saved Queries",queries.length]}></ProfileDiv>
             </section>
             <div className={styles.specialRectangle}>
-                {queries.map((q)=>(<QueryInfo {...q}></QueryInfo>))}
+                <button className={styles.rectangularButton} onClick={getPageData}><h3>Refresh</h3></button>
+                {queries.length === 0? <Loading></Loading> :(queries.map((q)=>(<QueryInfo {...q}></QueryInfo>)))}
             </div>
             
             

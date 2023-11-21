@@ -201,7 +201,7 @@ const QueryRun = () => {
               //if the element is already on the dict add the values
               speciesSample[name][0].push(parseInt(dataResponse[i][3])); // Add diameter
               speciesSample[name][1].push(parseInt(dataResponse[i][4])); // Add Height
-              speciesSample[name][2]+=parseInt(dataResponse[i][5]); // Add Population
+              speciesSample[name][2] = parseInt(dataResponse[i][5]); // Add Population
             }
             else if(Object.keys(speciesSample).length < 15){
               //if the element doesnt exist add it to the dict
@@ -227,6 +227,7 @@ const QueryRun = () => {
           if (Object.hasOwnProperty(key)) {
             speciesSample[key][0] = speciesSample[key][0].reduce((ac:number, n:number) => ac + n, 0) / speciesSample[key][0].length;
             speciesSample[key][1] = speciesSample[key][1].reduce((ac:number, n:number) => ac + n, 0) / speciesSample[key][1].length;
+           
           }
         }
         //finally we return the status of trees and the samples

@@ -5,9 +5,9 @@ import styles from '../styles/Home.module.css'
 const QueryInfo = (props:string[]) =>{
     return(
         <div className={styles.queryRow}>
-            <h2>{props[0]}</h2>
-            <p>{props[1]}</p>
-            <p>{props[2]}</p>
+            <h2>Id:  {props[0]}</h2>
+            <p>Title:  {props[1]}</p>
+            <p>Author:  {props[2]}</p>
         </div>
     );
 }

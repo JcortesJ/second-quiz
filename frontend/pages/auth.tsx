@@ -64,7 +64,7 @@ const AuthPage = () =>{
         <link rel="icon" href="/favicon.ico" />
       </Head>
             <section className={styles.specialRectangle}>
-                <h4>To run queries and access other's queries you need log in with your email and username. If you dont have an account you can input your email and create an username:</h4>
+                <h4>To run queries and access other's queries you need log in  username. If you dont have an account you can create an username:</h4>
                 <form className={styles.formulary}>
                  <label>Username:</label> 
                  <input className={styles.input}  ref={usernameInput} placeholder={"anAwesomeUser"}></input> 
