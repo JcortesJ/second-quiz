@@ -15,14 +15,10 @@ import PostQuery from '../components/postQuery';
 const QueryRun = () => {
   //Data brought from the API
   const [dataResponse,setdataResponse] = useState<any[]>([]);
-    //traer datos de la db y guardarlos con useeffect
-    const [species,setSpecies] = useState<string>("");
-    const [state,setState] = useState<number>(0);
-    const [diameter,setDiam] = useState<number>(0);
-    const [height,setH] = useState<number>(0);
-    const [inYear,setIY] = useState<number>(1950);
-    const [fnYear,setFY] = useState<number>(2010);
-    const [limit,setL] = useState<number>(1);
+  const [user,setUser] = useState<string>("angelica");
+  const [queryParameters,setQP] = useState<any[]>([]);
+  const [id,setQI] = useState<string>("");
+  const [comments,setComments] = useState<string[][]>([]);
     const [apiUrlEndpoint,setAPI] = useState<string>("");
      //code for the queryBuilder
      const speciesInput = useRef<HTMLInputElement>(null);
@@ -32,7 +28,7 @@ const QueryRun = () => {
      const intimeInput = useRef<HTMLInputElement>(null);
      const fintimeInput = useRef<HTMLInputElement>(null);
      const limitInput = useRef<HTMLInputElement>(null);
- 
+
      const [statesUs,setStates] = useState<string[]>(["All states", "Alabama",
          "Alaska",
          "Arizona",
@@ -84,6 +80,7 @@ const QueryRun = () => {
          "West Virginia",
          "Wisconsin",
          "Wyomin"]);
+    
 
      function getPageData() {
       if (apiUrlEndpoint != ""){
@@ -94,6 +91,7 @@ const QueryRun = () => {
             setdataResponse(["No data has been found"]);
           } else {
             setdataResponse(res.result);
+            getPageComments();
             //console.log(dataResponse[0][0])
           }
         })
@@ -105,6 +103,30 @@ const QueryRun = () => {
 
     }
 
+    function getPageComments() {
+        console.log(`Id: ${id}`)
+        /*
+        fetch("../api/queries/comments/"+id)
+        .then(response => response.json())
+        .then(res => {
+          if (res === undefined) {
+            setComments([]);
+          } else {
+            setComments(res.result);
+            
+            //console.log(dataResponse[0][0])
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          // Manejar el error según sea necesario
+        });
+        */
+      
+
+    }
+
+
 
     useEffect(
          ()=>{ getPageData()
@@ -114,16 +136,15 @@ const QueryRun = () => {
 
      function borrarTodo(e: any): void {
           e.preventDefault()
-          console.log('borrar')
           if (speciesInput.current != null && stateInput.current != null && diameterInput.current != null && heightInput.current != null && intimeInput.current != null && fintimeInput.current != null && limitInput.current != null) {
               speciesInput.current.value = "";
-              stateInput.current.value = "";
               diameterInput.current.value = "0";
               heightInput.current.value = "0";
               limitInput.current.value = "10";
-              intimeInput.current.value = "1950";
-              fintimeInput.current.value= "2010";
+              intimeInput.current.value = "1900";
+              fintimeInput.current.value= "2020";
               setdataResponse([])
+              
               setAPI("")
           }
       }
@@ -159,8 +180,8 @@ const QueryRun = () => {
               if(diameterInput.current.value =="") diameterInput.current.value="0"
               if(heightInput.current.value=="") heightInput.current.value="0"
               if(limitInput.current.value =="") limitInput.current.value="10"
-              if(intimeInput.current.value=="" || parseInt(intimeInput.current.value) < 1950 ) intimeInput.current.value ="1950"
-              if(fintimeInput.current.value=="" || parseInt(fintimeInput.current.value)> 2010 ) fintimeInput.current.value="2010"
+              if(intimeInput.current.value=="" || parseInt(intimeInput.current.value) < 1900 ) intimeInput.current.value ="1900"
+              if(fintimeInput.current.value=="" || parseInt(fintimeInput.current.value)> 2020 ) fintimeInput.current.value="2020"
               if(parseInt(intimeInput.current.value) > parseInt(fintimeInput.current.value)){
                 let aux = intimeInput.current.value;
                 intimeInput.current.value = fintimeInput.current.value;
@@ -172,6 +193,14 @@ const QueryRun = () => {
               console.log("final request:")
               setAPI(request);
               console.log(apiUrlEndpoint)
+              
+              setQI((Math.floor(Math.random() * 1000) + 1).toString())
+              console.log(`Id: ${id}`)
+              //<string:speciesName>,<int:stateCode>,<int:firstYear>,<int:lastYear>,<int:initialDiameter>,<int:initialHeight>,<int:limit>,<string:username>,<string:name>"
+              let change = [speciesInput.current.value,stateInput.current.value,intimeInput.current.value,fintimeInput.current.value,diameterInput.current.value,heightInput.current.value,limitInput.current.value,user,id];
+              console.log(`Parameters: ${change}`)
+              setQP(change);
+              
               getPageData();
           }
       }
@@ -218,7 +247,7 @@ const QueryRun = () => {
         }
         //calculate  average
         for (var key in speciesSample) {
-          if (species.hasOwnProperty(key)) {
+          if (Object.hasOwnProperty(key)) {
             speciesSample[key][0] = speciesSample[key][0].reduce((ac:number, n:number) => ac + n, 0) / speciesSample[key][0].length;
             speciesSample[key][1] = speciesSample[key][1].reduce((ac:number, n:number) => ac + n, 0) / speciesSample[key][1].length;
           }
@@ -229,7 +258,7 @@ const QueryRun = () => {
   
 
     //Code for comments 
-  const [comments,setComments] = useState<string[][]>([['There are no comments','Anything here right now'],]);
+  
   return (
     <div className={styles.fondoNormal}>
       <Head>
@@ -249,11 +278,12 @@ const QueryRun = () => {
                 <label>height {'>'} </label> <input ref={heightInput} type={'number'} placeholder={"0"} className={styles.finput} />
             </div>
             <div><label>Select a range of time: </label>
-                <label>From:</label> <input ref={intimeInput} type={'number'} placeholder={"1950"}   max={"2009"} min={"1950"} className={styles.finput} />
-                <label>To:</label> <input ref={fintimeInput} type={'number'} placeholder={"2010"} max={"2010"} min={"1951"} className={styles.finput} /></div>
+                <label>From:</label> <input ref={intimeInput} type={'number'} placeholder={"1900"}   max={"2009"} min={"1900"} className={styles.finput} />
+                <label>To:</label> <input ref={fintimeInput} type={'number'} placeholder={"2020"} max={"2020"} min={"1951"} className={styles.finput} /></div>
 
             <div><label>Show results:</label> <input ref={limitInput} type={'number'}  max={"1000"} min={"1"}className={styles.finput} placeholder={"10"} />
                 <label> items</label></div>
+            {dataResponse != undefined && dataResponse.length < 11 ? <p>Not enough data? Try changing the number of result items</p> : <p></p>}
             <div>
                 <button className={styles.formButton} onClick={borrarTodo}>Reset</button>
                 <button className={styles.formButton} onClick={getAPIEndpoint}>Query</button>
@@ -261,15 +291,16 @@ const QueryRun = () => {
         </form>
       <section className={styles.flexRow}>
         <article className={styles.graphsContainer}>{
-          dataResponse===undefined? <p>Your query hasn't found any results. You should try changing the parameters (e.g the initial or final year)</p> : (dataResponse.length === 0? <Loading></Loading> : <Graphics {...createCharts()}></Graphics>)
+          dataResponse===undefined? <p>Your query hasn't found any results. You should try changing the parameters (e.g the initial or final year) <b>If after retrying anything is displayed it means that USFS FIA data base doesnt have that recording</b></p> : (dataResponse.length === 0? <Loading></Loading> : <Graphics {...createCharts()}></Graphics>)
         }</article>
         <div className={styles.commentsColumn}>
           <h3>Query's information</h3>
-          <InfoDiv{...["Author", "Username"]}></InfoDiv>
-          <PostQuery{...["user",""]}></PostQuery>
+          {dataResponse===undefined? <p>Run a query to give it a name</p> : (dataResponse.length === 0? <Loading></Loading> : <PostQuery{...queryParameters}></PostQuery>)}
           <section className={styles.commentSection}>
-            {comments.map((comment)=>(<Comment  {...comment}></Comment>))}
-            <PostComment {...["user"]}></PostComment>
+            <h3>Comment's Section</h3>
+            {comments.length==0 ? (<p>Actually there are not comments. But you could post one</p>): (comments.map((comment)=>(<Comment  {...comment}></Comment>)))}
+            <button onClick={getPageComments} className={styles.regularButton}>Refresh</button>
+            <PostComment {...[user]}></PostComment>
           </section>
 
         </div>
