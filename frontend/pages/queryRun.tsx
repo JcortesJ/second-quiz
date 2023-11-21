@@ -5,20 +5,19 @@ import NavBar from '../components/navbar';
 import InfoDiv from '../components/infoDiv';
 
 import Comment from '../components/comment';
-import PostComment from '../components/postComment';
 import { useEffect, useRef, useState } from 'react';
 import Loading from '../components/loading';
 import Graphics from '../components/graphics';
 import PostQuery from '../components/postQuery';
+import { useUser } from './context/UserContext';
 
 
 const QueryRun = () => {
   //Data brought from the API
+  const {username,setLoggedInUser} = useUser();
   const [dataResponse,setdataResponse] = useState<any[]>([]);
-  const [user,setUser] = useState<string>("angelica");
   const [queryParameters,setQP] = useState<any[]>([]);
   const [id,setQI] = useState<string>("");
-  const [comments,setComments] = useState<string[][]>([]);
     const [apiUrlEndpoint,setAPI] = useState<string>("");
      //code for the queryBuilder
      const speciesInput = useRef<HTMLInputElement>(null);
@@ -81,7 +80,7 @@ const QueryRun = () => {
          "Wisconsin",
          "Wyomin"]);
     
-
+     console.log("logeado"+username)
      function getPageData() {
       if (apiUrlEndpoint != ""){
         fetch(apiUrlEndpoint)
@@ -91,7 +90,6 @@ const QueryRun = () => {
             setdataResponse(["No data has been found"]);
           } else {
             setdataResponse(res.result);
-            getPageComments();
             //console.log(dataResponse[0][0])
           }
         })
@@ -103,28 +101,7 @@ const QueryRun = () => {
 
     }
 
-    function getPageComments() {
-        console.log(`Id: ${id}`)
-        /*
-        fetch("../api/queries/comments/"+id)
-        .then(response => response.json())
-        .then(res => {
-          if (res === undefined) {
-            setComments([]);
-          } else {
-            setComments(res.result);
-            
-            //console.log(dataResponse[0][0])
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-          // Manejar el error según sea necesario
-        });
-        */
-      
-
-    }
+ 
 
 
 
@@ -196,8 +173,8 @@ const QueryRun = () => {
               
               setQI((Math.floor(Math.random() * 1000) + 1).toString())
               console.log(`Id: ${id}`)
-              //<string:speciesName>,<int:stateCode>,<int:firstYear>,<int:lastYear>,<int:initialDiameter>,<int:initialHeight>,<int:limit>,<string:username>,<string:name>"
-              let change = [speciesInput.current.value,stateInput.current.value,intimeInput.current.value,fintimeInput.current.value,diameterInput.current.value,heightInput.current.value,limitInput.current.value,user,id];
+              //<string:username>,<string:name>,<int:stateCode>,<string:speciesName>,<int:initialDiameter>,<int:initialHeight>,<int:firstYear>,<int:lastYear>,<int:limit>,<string:query_id>,<string:comment>
+              let change = [username,stateInput.current.value,speciesInput.current.value,diameterInput.current.value,heightInput.current.value,intimeInput.current.value,fintimeInput.current.value,limitInput.current.value,id];
               console.log(`Parameters: ${change}`)
               setQP(change);
               
@@ -255,9 +232,7 @@ const QueryRun = () => {
         //finally we return the status of trees and the samples
           return [deadTrees,liveTrees,removedTrees,noStatTrees,speciesSample,statesSample]
       }
-  
 
-    //Code for comments 
   
   return (
     <div className={styles.fondoNormal}>
@@ -296,13 +271,6 @@ const QueryRun = () => {
         <div className={styles.commentsColumn}>
           <h3>Query's information</h3>
           {dataResponse===undefined? <p>Run a query to give it a name</p> : (dataResponse.length === 0? <Loading></Loading> : <PostQuery{...queryParameters}></PostQuery>)}
-          <section className={styles.commentSection}>
-            <h3>Comment's Section</h3>
-            {comments.length==0 ? (<p>Actually there are not comments. But you could post one</p>): (comments.map((comment)=>(<Comment  {...comment}></Comment>)))}
-            <button onClick={getPageComments} className={styles.regularButton}>Refresh</button>
-            <PostComment {...[user]}></PostComment>
-          </section>
-
         </div>
       </section>
     </div>

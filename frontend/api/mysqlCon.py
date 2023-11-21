@@ -35,14 +35,13 @@ def verifyUsername(userName):
     cursor.close()
     return createJson(results)
 
-def insertUser(email,username):
+def insertUser(username):
     try:
         #code with transaction to insert an user
         cursor = db.cursor()
-        user_id = username[:3]+str(random.randint(0,1000))
         result = {}
-        sql_insert = "INSERT INTO users (email, username, id) VALUES (%s, %s, %s)"
-        data = (email,username,user_id)
+        sql_insert = "INSERT INTO users (username) VALUES (%s)"
+        data = (username,)
         cursor.execute(sql_insert, data)
         # Confirm transaction
         db.commit()
@@ -53,30 +52,15 @@ def insertUser(email,username):
         cursor.close()
         return createJson(result)
     
-def insertComment(id_query,username,comment):
-    try:
-        #code with transaction to insert a comment
-        cursor = db.cursor()
-        result = {}
-        sql_insert = "INSERT INTO querycomments (query_id,username,query_comment) VALUES (%s, %s, %s)"
-        data = (id_query,username,comment)
-        cursor.execute(sql_insert, data)
-        # Confirm transaction
-        db.commit()
-        result["result"] = "Insertion successful"
-    except mysql.connector.Error as e:
-        result["result"] =f"Error while inserting: {e}"
-    finally:
-        cursor.close()
-        return createJson(result)
+
 
 def saveQueryUser(username,queryname,state,species,diameter,height,inYear,finYear,limits,query_id):
     try:
         #code with transaction to insert an query
         cursor = db.cursor()
-        
         result = {}
         #insert in queries
+        
         sql_insert = "INSERT INTO queries (id,queryname,tree_state_code,species_common_name,current_diameter,actual_height,initial_time,final_time,limits) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         data = (query_id,queryname,state,species,diameter,height,inYear,finYear,limits)
         cursor.execute(sql_insert, data)
@@ -88,6 +72,7 @@ def saveQueryUser(username,queryname,state,species,diameter,height,inYear,finYea
         cursor.execute(sql_insert, data)
         # Confirm transaction
         db.commit()
+        
         result["result"] = "Insertion successful"
     except mysql.connector.Error as e:
         result["result"] =f"Error while inserting: {e}"
@@ -95,11 +80,11 @@ def saveQueryUser(username,queryname,state,species,diameter,height,inYear,finYea
         cursor.close()
         return createJson(result)
     
-def getQueryId(id_query):
+def getSavedQueries(username):
     cursor = db.cursor()
-    args = [id_query]
+    args = [username]
     #we use an stored procedure
-    cursor.execute("SELECT username,query_comment FROM queries INNER JOIN querycomments ON query_id=id WHERE query_id=(%s)",args)
+    cursor.execute("SELECT queries.id,queryname FROM savedqueries INNER JOIN queries ON query_id=queries.id WHERE username=(%s)",args)
     response =cursor.fetchall()
     results = {"result":response}
     #if results = 0, the user doesnt exist in the db. If it is 1, it already exists

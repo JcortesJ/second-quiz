@@ -11,15 +11,15 @@ const PostQuery = (props: any[]) => {
     const [name, setName] = useState<string>("");
 
     function createQuery(e: any) {
-        if (nameInput.current != null) {
+        if (nameInput.current != null ) {
             e.preventDefault()
             let apiUrlEndpoint: string = "../api/queries/create/";
             let species: string = ""
-            // <string:speciesName>,<int:stateCode>,<int:firstYear>,<int:lastYear>,<int:initialDiameter>,<int:initialHeight>,<int:limit>,<string:username>,<string:name>"
-            if (props[0] == "") species = "any"
-            else species = props[0]
+            // <string:username>,<string:name>,<int:stateCode>,<string:speciesName>,<int:initialDiameter>,<int:initialHeight>,<int:firstYear>,<int:lastYear>,<int:limit>
+            if (props[2] == "") species = "any"
+            else species = props[2]
             console.log(props)
-            apiUrlEndpoint += species + "," + props[1] + "," + props[2] + "," + props[3] + "," + props[4] + "," + props[5] + "," + props[6] + "," + props[7] + "," + nameInput.current.value+","+props[8];
+            apiUrlEndpoint += props[0] + "," +nameInput.current.value+","+ props[1] + "," + species + ","+ props[3] + "," + props[4] + "," + props[5] + "," + props[6] + "," +props[7]+","+props[8];
             console.log(apiUrlEndpoint)
             fetch(apiUrlEndpoint)
                 .then(response => response.json())
@@ -27,7 +27,7 @@ const PostQuery = (props: any[]) => {
                     if (res === undefined) {
                         setdataResponse([""]);
                     } else {
-                        if (nameInput.current != null) {
+                        if (nameInput.current != null ) {
                             setdataResponse(res.result);
                             setName(nameInput.current.value)
                             setKey(1);
@@ -45,11 +45,13 @@ const PostQuery = (props: any[]) => {
     return (
         <div className={styles.commentDiv}>
             <form className={styles.formulary}>
-                <label> Author: {props[7]} </label>
+                <label> Author: {props[0]} </label>
                 <div key={key}>
                     {dataResponse.length > 0 ?
-                        (<label>Name of the query: {name}</label>) : (<div>
-                            <input className={styles.input} ref={nameInput} id={"newName"} placeholder={"Give a name to the query"}></input>
+                        (<div>
+                            <label>Name of the query: {name}</label>
+                        </div>) : (<div>
+                            <input className={styles.input} ref={nameInput}  placeholder={"Give a name to the query"}></input>
                             <button className={styles.regularButton} onClick={createQuery}>Save it</button>
                         </div>)
                     }

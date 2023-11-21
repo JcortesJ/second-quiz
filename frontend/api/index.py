@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from bigQueryCon import standard_query,state_query,species_query,state_species_query
-from mysqlCon import bringAllusers,verifyUsername,insertUser,saveQueryUser,insertComment,getQueryId
+from mysqlCon import bringAllusers,verifyUsername,insertUser,saveQueryUser,getSavedQueries
 
 
 app = Flask(__name__)
@@ -48,24 +48,19 @@ def readAllUsers():
 def verifyLogin(username):
     return verifyUsername(userName=username)
 
-@app.route("/api/users/create/<string:email>,<string:username>",methods=["GET"])
-def createUser(email,username):
-    return insertUser(username=username,email=email)
+@app.route("/api/users/create/<string:username>",methods=["GET"])
+def createUser(username):
+    return insertUser(username=username)
 
-@app.route("/api/queries/create/<string:speciesName>,<int:stateCode>,<int:firstYear>,<int:lastYear>,<int:initialDiameter>,<int:initialHeight>,<int:limit>,<string:username>,<string:name>,<string:query_id>",methods=["GET"])
-def saveQuery(speciesName,stateCode,firstYear,lastYear,initialDiameter,initialHeight,limit,username,name,query_id):
+@app.route("/api/queries/create/<string:username>,<string:name>,<int:stateCode>,<string:speciesName>,<int:initialDiameter>,<int:initialHeight>,<int:firstYear>,<int:lastYear>,<int:limit>,<string:query_id>",methods=["GET"])
+def saveQuery(username,name,stateCode,speciesName,initialDiameter,initialHeight,firstYear,lastYear,limit,query_id):
     speciesName = speciesName.replace("%20"," ")
-    return saveQueryUser(username=username,queryname=name,state=stateCode,species=speciesName,diameter=initialDiameter,height=initialHeight,inYear=firstYear,finYear=lastYear,limits=limit,query_id=query_id)
+    return saveQueryUser(username,name,stateCode,speciesName,initialDiameter,initialHeight,firstYear,lastYear,limit,query_id)
 
-@app.route("/api/queries/comment/<string:query_id>,<string:username>,<string:comment>",methods=["GET"])
-def saveComment(query_id,username,comment):
-    comment = comment.replace("%20"," ")
-    return insertComment(query_id,username=username,comment=comment)
-
-@app.route("/api/queries/comments/<string:query_id>",methods=["GET"])
-def getComments(query_id):
-    return getQueryId(query_id)
-
+@app.route("/api/user/queries/<string:username>",methods=["GET"])
+def savedQueries(username):
+    username = username.replace("%20"," ")
+    return getSavedQueries(username=username)
 
 
 

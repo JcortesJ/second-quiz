@@ -121,10 +121,18 @@
   align-items: center;
   width: 100%;
   min-height: 30%;
-  padding: 3%;
+  padding: 1%;
   margin:auto;
   margin-bottom: 5%;
   margin-top: 2%;
+}
+
+.commentDiv div{
+  margin:auto;
+  display: flex;
+  margin-top: 2%;
+  flex-direction: column;
+  align-items: center;
 }
 
 .commentSection{
@@ -189,7 +197,9 @@
 .formulary > label{
   font-size: var(--sm);
   font-weight: bold;
+  margin:auto;
   margin-bottom: 4px;
+  margin-top: 2%;
 }
 
 

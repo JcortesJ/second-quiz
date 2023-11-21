@@ -1,9 +1,60 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import { useRef, useState } from 'react'
+import { useUser } from './context/UserContext';
 
 
 const AuthPage = () =>{
+    
+    const usernameInput = useRef<HTMLInputElement>(null);
+    const [dataResponse,setdataResponse] = useState<boolean>(false);
+    const {username,setLoggedInUser} = useUser();
+
+    function logIn(){
+        //first we would like to know if the user already exists, so we can set the global context to it
+        // if it doesnt exist we add it to the database and set to the context
+        
+        if(usernameInput.current != null){
+            //1. find if the username exists
+            
+            if(usernameInput.current.value != ""){
+                let apiUrlEndpoint = "../api/users/verify/"+usernameInput.current.value;
+            fetch(apiUrlEndpoint)
+            .then(response => response.json())
+            .then(res => {
+            if (res !== undefined) {
+                
+                if(parseInt(res.result) == 1 && usernameInput.current != null){
+                    //already exists
+                    setLoggedInUser(usernameInput.current.value);
+                    setdataResponse(true);
+                }
+                else if(parseInt(res.result) == 0 && usernameInput.current != null ){
+                    apiUrlEndpoint = "../api/users/create/"+usernameInput.current.value;
+                    fetch(apiUrlEndpoint)
+                    .then(response => response.json())
+                    .then(res2 => {
+                        if (res2 !== undefined) {
+                            console.log("segundo fetch:"+res2.result)
+                            if(usernameInput.current != null){
+                                setLoggedInUser(usernameInput.current.value);
+                                setdataResponse(true);
+                                console.log(dataResponse) 
+                            }
+                        }
+
+                    });
+                }
+            }
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          // Manejar el error según sea necesario
+        });
+            }
+        }
+    }
     return(
 
         <div className={styles.fondoNormal}>
@@ -15,14 +66,16 @@ const AuthPage = () =>{
             <section className={styles.specialRectangle}>
                 <h4>To run queries and access other's queries you need log in with your email and username. If you dont have an account you can input your email and create an username:</h4>
                 <form className={styles.formulary}>
-                 <label>Email: </label> 
-                 <input className={styles.input} type={"email"} id={"email"} placeholder={"youremail@example.com"}></input> 
                  <label>Username:</label> 
-                 <input className={styles.input}  id={"username"} placeholder={"anAwesomeUser"}></input> 
+                 <input className={styles.input}  ref={usernameInput} placeholder={"anAwesomeUser"}></input> 
                 </form>
-                <button className={styles.rectangularButton}>
-                    <a href='./queryRun'><p>Continue LogIn</p></a>
+                <button className={styles.regularButton} onClick={logIn}>
+                    LogIn
                 </button>
+                {dataResponse ? <div>
+                    <p> user authenticated {username}</p>
+                    <button className={styles.regularButton}><a href='./queryRun'>Continue</a></button>
+                </div> : <p>no user auth</p>}
             </section>
         </div>
     );
